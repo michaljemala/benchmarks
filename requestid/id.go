@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/oklog/ulid"
 	suuid "github.com/satori/go.uuid"
 )
 
@@ -16,22 +17,25 @@ var (
 	requestID uint64
 )
 
+var rnd = rand.New(rand.NewSource(time.Now().UnixNano()))
+
 func init() {
 	hostname, err := os.Hostname()
 	if hostname == "" || err != nil {
 		hostname = "localhost"
 	}
 
-	var (
-		rnd     = rand.New(rand.NewSource(time.Now().UnixNano()))
-		charset = "abcdefghijklmnopqrstuvwxyz0123456789"
-	)
+	charset := "abcdefghijklmnopqrstuvwxyz0123456789"
 	pid := make([]byte, 10)
 	for i := range pid {
 		pid[i] = charset[rnd.Intn(len(charset))]
 	}
 
 	prefix = fmt.Sprintf("%s/%s-", hostname, string(pid))
+}
+
+func ulidUUID() string {
+	return ulid.MustNew(ulid.Timestamp(time.Now()), rnd).String()
 }
 
 func googleUUID() string {

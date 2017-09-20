@@ -11,6 +11,13 @@ func TestAtomicUUID(t *testing.T) {
 	}
 }
 
+func BenchmarkUUIDUlid(b *testing.B) {
+	b.ResetTimer()
+	for n := 0; n < b.N; n++ {
+		ulidUUID()
+	}
+}
+
 func BenchmarkUUIDGoogle(b *testing.B) {
 	b.ResetTimer()
 	for n := 0; n < b.N; n++ {
